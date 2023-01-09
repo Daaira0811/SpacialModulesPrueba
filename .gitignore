@@ -1,0 +1,10 @@
+*.log
+*checkpoint.ipynb
+*.pyc
+*_dev.ipynb
+*outputs/
+*cache/
+*data/states
+*data/usa
+js/
+.DS_Store
