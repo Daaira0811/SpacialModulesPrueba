@@ -11,9 +11,9 @@ def init_geogrid(table_name, interactive_zone=None):
     initialises the available types on the front-end to a default list from text file
     initialises the GEOGRIDDATA to all "None"
     """
-
-    get_url='https://cityio.media.mit.edu/api/table/'+table_name
-    post_url='https://cityio.media.mit.edu/api/table/'+table_name
+    # cityscope-api.smartaraucania.org cityio.media.mit.edu
+    get_url='https://cityscope-api.smartaraucania.org/api/table/'+table_name
+    post_url='https://cityscope-api.smartaraucania.org/api/table/'+table_name
     with urllib.request.urlopen(get_url+'/GEOGRID') as url:
         geogrid=json.loads(url.read().decode()) 
     default_types=json.load(open('data/default_types.json'))
@@ -89,15 +89,19 @@ def init_geogrid(table_name, types, interactive_zone=None):
     initialises the available types on the front-end to a default list from text file
     initialises the GEOGRIDDATA to all "None"
     """
-
-    get_url='https://cityio.media.mit.edu/api/table/'+table_name
-    post_url='https://cityio.media.mit.edu/api/table/'+table_name
-    with urllib.request.urlopen(get_url+'/GEOGRID/') as url:
+    # cityio.media.mit.edu cityscope-api.smartaraucania.org
+    get_url='https://cityscope-api.smartaraucania.org/api/table/epa/GEOGRID'
+    post_url='https://cityscope-api.smartaraucania.org/api/table/epa/GEORID'
+    user_agent = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64)'
+    headers = {'User-Agent': user_agent}
+    req = urllib.request.Request(get_url,None, headers) 
+   
+    with urllib.request.urlopen(req) as url:
         geogrid=json.loads(url.read().decode()) 
     geogrid['properties']['types']=types
 
     if interactive_zone is not None:
-        with urllib.request.urlopen(get_url+'/GEOGRID') as url:
+        with urllib.request.urlopen(req) as url:
             geogrid_gpd=gpd.read_file(url.read().decode())
         geogrid_intersect_interactive=gpd.overlay(geogrid_gpd, interactive_zone)
         intersect_ids=geogrid_intersect_interactive['id'].values

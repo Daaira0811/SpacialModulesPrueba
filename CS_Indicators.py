@@ -336,17 +336,17 @@ class Proximity_Indicator(Indicator):
             cell_employment=sum(agg_naics.values())
             #print(i_c)
             #print(new_reachable_attributes.keys())
-            if i_c < 165:
-                new_reachable_attributes[i_c]['source_emp']=cell_employment
-                added_attributes['emp_total']=cell_employment
+            #if i_c < 165:
+            new_reachable_attributes[i_c]['source_emp']=cell_employment
+            added_attributes['emp_total']=cell_employment
 
             if '1' in agg_lbcs:
                 cell_population=agg_lbcs['1']
             else:
                 cell_population=0
-            if i_c < 165:
-                added_attributes['res_total']=cell_population
-                new_reachable_attributes[i_c]['source_res']=cell_population
+            #if i_c < 165:
+            added_attributes['res_total']=cell_population
+            new_reachable_attributes[i_c]['source_res']=cell_population
 
             for combined_code in self.naics_codes:
                 naics_codes=combined_code.split('naics_')[1].split('-')
@@ -586,7 +586,7 @@ class Mobility_indicator(Indicator):
         # TODO: if route lengths is None (not precomputed), should get this by calling a method of the mob_sys
         self.route_lengths=route_lengths
         self.base_simpop_df=simpop_df.copy()
-        print('Init simulation')
+        print('Init simulation111')
         grid_zones=self.create_grid_zones()
         model_zones=zones.loc[zones['model_area']]
         model_zones['grid_area']=False
@@ -621,8 +621,11 @@ class Mobility_indicator(Indicator):
         self.profile_descriptions=profile_descriptions
 
     def create_grid_zones(self):
+        print('Se están creando las zonas')
         grid_zones=self.geogrid.copy()
         centroids=grid_zones['geometry'].centroid
+        #for c in centroids:
+            #print(c)
         grid_zones['x_centroid']=[c.x for c in centroids]
         grid_zones['y_centroid']=[c.y for c in centroids]
         cols_to_init=[col for col in self.zones.columns if (
@@ -767,13 +770,13 @@ class Mobility_indicator(Indicator):
                            'viz_type':'radar'}
     
     def post_trips(self, deckgl_trips):
-        post_url='https://cityio.media.mit.edu/api/table/'+self.table_name
+        post_url='https://cityscope-api.smartaraucania.org/api/table/'+self.table_name
         r = requests.post(post_url+'/ABM2', data = json.dumps(deckgl_trips),
             headers={'Content-Type': 'application/json'})
         print('Post ABM: {}'.format(r))
 
     def post_od(self, od_output):
-        post_url='https://cityio.media.mit.edu/api/table/'+self.table_name
+        post_url='https://cityscope-api.smartaraucania.org/api/table/'+self.table_name
         r = requests.post(post_url+'/od', data = json.dumps(od_output),
             headers={'Content-Type': 'application/json'})
         print('Post OD: {}'.format(r))
